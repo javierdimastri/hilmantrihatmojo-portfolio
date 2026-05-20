@@ -17,19 +17,19 @@ const EXPERIENCES = [
         name: 'COS-Sales (Video-Call-System)',
         period: '2022 - Current',
         description: 'Web Application used by Sales to verify customers easily via video call, improving credit approval by 40%.',
-        tech: ['Java Spring Boot', 'NestJs', 'NextJs', 'WebSocket', 'Redis', 'Twilio']
+        tech: ['Java Spring Boot', 'NestJs', 'NextJs', 'WebSocket', 'Redis', 'Twilio', 'Material-UI', 'MSSQL']
       },
       {
         name: 'Dea-Repo',
         period: '2020 - 2022',
         description: 'Initiated and maintained Internal Application used by IT Planning Architecture to track initiatives or new applications registered in the Company.',
-        tech: []
+        tech: ['Java Spring Boot', 'Express', 'ReactJs', 'Antd', 'MongoDB']
       },
       {
         name: 'Integral',
         period: '2020 - 2022',
         description: 'Maintained Talent-X Application for HR recruitment tracking and an internal app for PMO to track project status from creation to closure.',
-        tech: []
+        tech: ['Java Spring Boot', 'Express', 'ReactJs', 'Antd', 'MongoDB']
       }
     ]
   },
@@ -42,7 +42,7 @@ const EXPERIENCES = [
         name: 'Project Operation Acceleration Team',
         period: '2018 - 2020',
         description: 'Focused on ensuring smooth project handover by fixing existing bugs and adding necessary new features prior to project closure.',
-        tech: ['.NET']
+        tech: ['.NET', 'C#', 'ASP.Net', 'MSSQL']
       }
     ]
   }
