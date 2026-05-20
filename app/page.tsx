@@ -273,6 +273,7 @@ const EducationSection = React.memo(() => (
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Telkom University</h3>
           <p className="text-gray-600 font-medium">Engineering Physics</p>
+          <p className="text-sm text-gray-500 mt-2">GPA: 2.93</p>
         </div>
         <div className="hidden sm:block text-gray-400">
           <GraduationCap size={48} strokeWidth={1} />
