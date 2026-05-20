@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Github, Linkedin, Mail, Terminal, Database, Layout, 
-  Server, Code2, Briefcase, GraduationCap, ChevronRight 
+import {
+  Github, Linkedin, Mail, Terminal, Database, Layout,
+  Server, Code2, Briefcase, GraduationCap, ChevronRight
 } from 'lucide-react';
 
 // Static data
@@ -96,9 +96,8 @@ const throttle = (fn: Function, delay: number) => {
 
 // Navigation Component
 const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) => (
-  <nav className={`fixed w-full z-50 transition-all duration-300 ${
-    isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
-  }`}>
+  <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
+    }`}>
     <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
       <div className="font-mono font-bold text-xl text-gray-900 tracking-tighter">
         <span className="text-blue-600">{'<'}</span>
@@ -110,9 +109,8 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) =
           <button
             key={item}
             onClick={() => onNavigate(item.toLowerCase())}
-            className={`text-sm font-medium transition-colors hover:text-blue-600 ${
-              activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'
-            }`}
+            className={`text-sm font-medium transition-colors hover:text-blue-600 ${activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'
+              }`}
           >
             {item}
           </button>
@@ -136,18 +134,18 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
             </div>
             <span>Available for new opportunities</span>
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
             Fullstack Developer.
           </h1>
-          
+
           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
-            I specialize in building robust, scalable applications from the database to the user interface. 
+            I specialize in building robust, scalable applications from the database to the user interface.
             Passionate about clean code, modern architecture, and delivering impactful solutions.
           </p>
-          
+
           <div className="flex flex-wrap items-center gap-6">
-            <button 
+            <button
               onClick={() => onNavigate('experience')}
               className="bg-gray-900 text-white px-8 py-4 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center gap-2"
             >
@@ -170,9 +168,9 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
 
         {/* Right Profile Photo */}
         <div className="hidden md:flex justify-center">
-          <div className="relative w-80 h-83 rounded-2xl overflow-hidden shadow-2xl">
-            <img 
-              src="/profile.jpg" 
+          <div className="relative w-80 h-85 rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src="/profile.jpg"
               alt="Profile photo"
               className="w-full h-full object-cover"
             />
@@ -197,7 +195,7 @@ const ExperienceSection = React.memo(() => (
           <div key={index} className="relative pl-8 md:pl-0">
             {/* Mobile timeline line */}
             <div className="md:hidden absolute left-0 top-2 bottom-0 w-px bg-gray-200" />
-            
+
             <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-baseline">
               <div className="md:w-1/4 mb-4 md:mb-0">
                 <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
@@ -207,7 +205,7 @@ const ExperienceSection = React.memo(() => (
               <div className="md:w-3/4">
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{exp.role}</h3>
                 <div className="text-lg text-blue-600 font-medium mb-6">{exp.company}</div>
-                
+
                 <div className="space-y-8">
                   {exp.projects.map((project, pIndex) => (
                     <div key={pIndex} className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:border-blue-100 transition-colors">
@@ -282,7 +280,7 @@ const EducationSection = React.memo(() => (
         <GraduationCap className="text-blue-600" size={28} />
         <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Education</h2>
       </div>
-      
+
       <div className="bg-gray-50 p-8 rounded-2xl border border-gray-100 flex justify-between items-start hover:border-blue-200 transition-colors group">
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">Telkom University</h3>
@@ -321,7 +319,7 @@ export default function Page() {
   useEffect(() => {
     const handleScroll = throttle(() => {
       setIsScrolled(window.scrollY > 50);
-      
+
       const current = SECTIONS.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -330,7 +328,7 @@ export default function Page() {
         }
         return false;
       });
-      
+
       if (current) setActiveSection(current);
     }, 100);
 
