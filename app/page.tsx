@@ -153,13 +153,13 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
               <ChevronRight size={20} />
             </button>
             <div className="flex space-x-6 px-6">
-              <a href="#" className="text-gray-400 hover:text-gray-900 transition-colors">
+              <a href="https://github.com/javierdimastri/javierdimastri" className="text-gray-400 hover:text-gray-900 transition-colors">
                 <Github size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-[#0077b5] transition-colors">
+              <a href="https://www.linkedin.com/in/mohammed-hilman-trihatmojo" className="text-gray-400 hover:text-[#0077b5] transition-colors">
                 <Linkedin size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors">
+              <a href="hilmantrihatmojo@gmail.com" className="text-gray-400 hover:text-red-500 transition-colors">
                 <Mail size={24} />
               </a>
             </div>
