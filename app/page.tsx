@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Github, Linkedin, Mail, Terminal, Database, Layout, 
@@ -81,9 +83,9 @@ const NAV_ITEMS = ['Home', 'Experience', 'Skills', 'Education'];
 const SECTIONS = ['home', 'experience', 'skills', 'education'];
 
 // Throttle utility
-const throttle = (fn, delay) => {
+const throttle = (fn: Function, delay: number) => {
   let lastCall = 0;
-  return (...args) => {
+  return (...args: any[]) => {
     const now = Date.now();
     if (now - lastCall >= delay) {
       lastCall = now;
@@ -93,7 +95,7 @@ const throttle = (fn, delay) => {
 };
 
 // Navigation Component
-const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }) => (
+const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) => (
   <nav className={`fixed w-full z-50 transition-all duration-300 ${
     isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
   }`}>
@@ -121,7 +123,7 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }) => (
 ));
 
 // Hero Section Component
-const HeroSection = React.memo(({ onNavigate }) => (
+const HeroSection = React.memo(({ onNavigate }: any) => (
   <section id="home" className="min-h-screen flex items-center pt-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="max-w-3xl">
@@ -289,12 +291,12 @@ const Footer = React.memo(() => (
   </footer>
 ));
 
-// Main App Component
-const App = () => {
+// Main Page Component
+export default function Page() {
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const scrollTo = useCallback((id) => {
+  const scrollTo = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -321,8 +323,6 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-
-
   return (
     <div className="font-sans text-gray-900 bg-white">
       <Navigation activeSection={activeSection} onNavigate={scrollTo} isScrolled={isScrolled} />
@@ -335,6 +335,4 @@ const App = () => {
       <Footer />
     </div>
   );
-};
-
-export default App;
+}
