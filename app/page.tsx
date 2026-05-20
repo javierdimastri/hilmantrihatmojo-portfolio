@@ -159,7 +159,7 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
               <a href="https://www.linkedin.com/in/mohammed-hilman-trihatmojo" className="text-gray-400 hover:text-[#0077b5] transition-colors">
                 <Linkedin size={24} />
               </a>
-              <a href="hilmantrihatmojo@gmail.com" className="text-gray-400 hover:text-red-500 transition-colors">
+              <a href="mailto:hilmantrihatmojo@gmail.com" className="text-gray-400 hover:text-red-500 transition-colors">
                 <Mail size={24} />
               </a>
             </div>
