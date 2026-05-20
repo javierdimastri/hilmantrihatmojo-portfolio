@@ -14,14 +14,14 @@ const EXPERIENCES = [
     period: '2020 - Current',
     projects: [
       {
-        name: 'COS-SALEs (Video-Call-System)',
+        name: 'COS-Sales (Video-Call-System)',
         period: '2022 - Current',
         description: 'Web Application used by Sales to verify customers easily via video call, improving credit approval by 40%.',
         tech: ['Java Spring Boot', 'NestJs', 'NextJs', 'WebSocket', 'Redis', 'Twilio']
       },
       {
         name: 'Dea-Repo',
-        period: 'Project',
+        period: '2020 - 2022',
         description: 'Initiated and maintained Internal Application used by IT Planning Architecture to track initiatives or new applications registered in the Company.',
         tech: []
       },
