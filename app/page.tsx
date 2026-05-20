@@ -170,7 +170,7 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
 
         {/* Right Profile Photo */}
         <div className="hidden md:flex justify-center">
-          <div className="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative w-80 h-83 rounded-2xl overflow-hidden shadow-2xl">
             <img 
               src="/profile.jpg" 
               alt="Profile photo"
