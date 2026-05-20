@@ -126,42 +126,56 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) =
 const HeroSection = React.memo(({ onNavigate }: any) => (
   <section id="home" className="min-h-screen flex items-center pt-20 bg-gray-50">
     <div className="max-w-7xl mx-auto px-6 md:px-12">
-      <div className="max-w-3xl">
-        <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full mb-6 text-sm font-medium">
-          <div className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        {/* Left Content */}
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full mb-6 text-sm font-medium">
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </div>
+            <span>Available for new opportunities</span>
           </div>
-          <span>Available for new opportunities</span>
+          
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+            Fullstack Developer.
+          </h1>
+          
+          <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
+            I specialize in building robust, scalable applications from the database to the user interface. 
+            Passionate about clean code, modern architecture, and delivering impactful solutions.
+          </p>
+          
+          <div className="flex flex-wrap items-center gap-6">
+            <button 
+              onClick={() => onNavigate('experience')}
+              className="bg-gray-900 text-white px-8 py-4 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center gap-2"
+            >
+              View Experience
+              <ChevronRight size={20} />
+            </button>
+            <div className="flex space-x-6 px-6">
+              <a href="#" className="text-gray-400 hover:text-gray-900 transition-colors">
+                <Github size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-[#0077b5] transition-colors">
+                <Linkedin size={24} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-red-500 transition-colors">
+                <Mail size={24} />
+              </a>
+            </div>
+          </div>
         </div>
-        
-        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-          Fullstack Developer.
-        </h1>
-        
-        <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
-          I specialize in building robust, scalable applications from the database to the user interface. 
-          Passionate about clean code, modern architecture, and delivering impactful solutions.
-        </p>
-        
-        <div className="flex flex-wrap items-center gap-6">
-          <button 
-            onClick={() => onNavigate('experience')}
-            className="bg-gray-900 text-white px-8 py-4 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center gap-2"
-          >
-            View Experience
-            <ChevronRight size={20} />
-          </button>
-          <div className="flex space-x-6 px-6">
-            <a href="#" className="text-gray-400 hover:text-gray-900 transition-colors">
-              <Github size={24} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-[#0077b5] transition-colors">
-              <Linkedin size={24} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-red-500 transition-colors">
-              <Mail size={24} />
-            </a>
+
+        {/* Right Profile Photo */}
+        <div className="hidden md:flex justify-center">
+          <div className="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl">
+            <img 
+              src="/profile.jpg" 
+              alt="Profile photo"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
