@@ -5,6 +5,7 @@ import {
     ChevronRight,
     Code2,
     Database,
+    Download,
     Github,
     GraduationCap,
     Layout,
@@ -163,6 +164,14 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
               View Experience
               <ChevronRight size={20} />
             </button>
+            <a
+              href="/HilmanCV.pdf"
+              download
+              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+            >
+              Download CV
+              <Download size={20} />
+            </a>
             <div className="flex space-x-6 px-6">
               <a href="https://github.com/javierdimastri/javierdimastri" className="text-gray-400 hover:text-gray-900 transition-colors">
                 <Github size={24} />
