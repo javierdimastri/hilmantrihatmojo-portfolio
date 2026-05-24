@@ -8,7 +8,8 @@ import {
     Github,
     GraduationCap,
     Layout,
-    Linkedin, Mail,
+    Linkedin,
+    Mail,
     Server,
     Terminal
 } from 'lucide-react';
@@ -117,18 +118,11 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) =
           <button
             key={item}
             onClick={() => onNavigate(item.toLowerCase())}
-            className={`text-sm font-medium transition-colors hover:text-blue-600 ${activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'
-              }`}
+            className={`text-sm font-medium transition-colors hover:text-blue-600 ${activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'}`}
           >
             {item}
           </button>
         ))}
-        <a
-          href="/conversation"
-          className={`text-sm font-medium transition-colors hover:text-blue-600 text-gray-600`}
-        >
-          Chat
-        </a>
       </div>
     </div>
   </nav>
@@ -268,10 +262,12 @@ const SkillsSection = React.memo(() => (
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {SKILL_CATEGORIES.map((category, index) => (
+        {SKILL_CATEGORIES.map((category, index) => {
+          const IconComponent = category.icon;
+          return (
           <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl ${category.bg} flex items-center justify-center mb-6`}>
-              <category.icon className={category.color} size={24} />
+              <IconComponent className={category.color} size={24} />
             </div>
             <h3 className="font-bold text-gray-900 mb-4 text-lg">{category.title}</h3>
             <ul className="space-y-3">
@@ -283,7 +279,8 @@ const SkillsSection = React.memo(() => (
               ))}
             </ul>
           </div>
-        ))}
+        );
+        })}
       </div>
     </div>
   </section>
