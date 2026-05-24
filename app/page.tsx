@@ -1,10 +1,19 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Github, Linkedin, Mail, Terminal, Database, Layout,
-  Server, Code2, Briefcase, GraduationCap, ChevronRight
+    Briefcase,
+    ChevronRight,
+    Code2,
+    Database,
+    Github,
+    GraduationCap,
+    Layout,
+    Linkedin,
+    Mail,
+    Server,
+    Terminal
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 // Static data
 const EXPERIENCES = [
@@ -109,8 +118,7 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) =
           <button
             key={item}
             onClick={() => onNavigate(item.toLowerCase())}
-            className={`text-sm font-medium transition-colors hover:text-blue-600 ${activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'
-              }`}
+            className={`text-sm font-medium transition-colors hover:text-blue-600 ${activeSection === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'}`}
           >
             {item}
           </button>
@@ -137,6 +145,9 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
 
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
             Fullstack Developer.
+            <p className="text-3xl md:text-4xl text-gray-600 mt-2 tracking-normal font-bold">
+              Hi, I'm Hilman.
+            </p>
           </h1>
 
           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
@@ -251,10 +262,12 @@ const SkillsSection = React.memo(() => (
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {SKILL_CATEGORIES.map((category, index) => (
+        {SKILL_CATEGORIES.map((category, index) => {
+          const IconComponent = category.icon;
+          return (
           <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl ${category.bg} flex items-center justify-center mb-6`}>
-              <category.icon className={category.color} size={24} />
+              <IconComponent className={category.color} size={24} />
             </div>
             <h3 className="font-bold text-gray-900 mb-4 text-lg">{category.title}</h3>
             <ul className="space-y-3">
@@ -266,7 +279,8 @@ const SkillsSection = React.memo(() => (
               ))}
             </ul>
           </div>
-        ))}
+        );
+        })}
       </div>
     </div>
   </section>
