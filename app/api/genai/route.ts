@@ -5,6 +5,26 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY!,
 });
 
+// Fallback model chain — tried in order when a model is unavailable
+const MODEL_FALLBACKS = [
+  'gemini-2.5-flash',
+  'gemini-2.0-flash',
+  'gemini-1.5-flash',
+  'gemini-2.5-flash-lite',
+  'gemini-3.5-flash'
+];
+
+function isRetriableError(err: any): boolean {
+  const msg: string = (err?.message || err?.toString() || '').toLowerCase();
+  return (
+    msg.includes('503') ||
+    msg.includes('unavailable') ||
+    msg.includes('high demand') ||
+    msg.includes('overloaded') ||
+    err?.status === 503
+  );
+}
+
 const SYSTEM_PROMPT = `You are a friendly personal assistant for Mohammed Hilman Trihatmojo's portfolio website. 
 Your job is to answer questions about Hilman and nothing else.
 
@@ -66,7 +86,7 @@ Hilman is a Senior Fullstack Developer with 6+ years of experience building robu
 6. You may use markdown formatting for lists and emphasis.`;
 
 type ConversationTurn = {
-  role: 'user' | 'assistant';
+  role: 'user' | 'model';
   text: string;
 };
 
@@ -74,41 +94,86 @@ export async function POST(req: Request) {
   try {
     const { prompt, history = [] }: { prompt: string; history: ConversationTurn[] } = await req.json();
 
-    if (!prompt) {
+    // Validate prompt
+    if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
       return NextResponse.json(
         { error: 'Missing prompt' },
         { status: 400 }
       );
     }
 
-    // Build conversation contents with history
+    // Validate conversation history structure
+    const isValidHistory = Array.isArray(history) && history.every(
+      (msg) =>
+        msg &&
+        typeof msg === 'object' &&
+        typeof msg.role === 'string' &&
+        ['user', 'model'].includes(msg.role) &&
+        typeof msg.text === 'string' &&
+        msg.text.trim() !== ''
+    );
+
+    if (!isValidHistory) {
+      return NextResponse.json(
+        { error: 'Invalid conversation format. Each message must have a role ("user" or "model") and a non-empty text string.' },
+        { status: 400 }
+      );
+    }
+
+    // Build conversation contents with validated history
     const contents = [
-      // Inject history as alternating user/model turns
       ...history.map((turn) => ({
-        role: turn.role === 'user' ? 'user' : 'model',
-        parts: [{ text: turn.text }],
+        role: turn.role, // already validated as 'user' | 'model'
+        parts: [{ text: turn.text.trim() }],
       })),
       // Add current user message
       {
-        role: 'user',
-        parts: [{ text: prompt }],
+        role: 'user' as const,
+        parts: [{ text: prompt.trim() }],
       },
     ];
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-      },
-    });
+    // Try each model in the fallback chain
+    let lastError: any = null;
 
-    return NextResponse.json({
-      text: response.text,
-    });
-  } catch (err: any) {
+    for (const model of MODEL_FALLBACKS) {
+      try {
+        const response = await ai.models.generateContent({
+          model,
+          contents,
+          config: {
+            systemInstruction: SYSTEM_PROMPT,
+          },
+        });
+
+        return NextResponse.json({ text: response.text });
+
+      } catch (err: any) {
+        lastError = err;
+
+        if (isRetriableError(err)) {
+          // Model is overloaded — try next in chain
+          console.warn(`[genai] Model "${model}" unavailable, trying next fallback...`);
+          continue;
+        }
+
+        // Non-retriable error (e.g. bad request, auth) — fail immediately
+        break;
+      }
+    }
+
+    // All models failed
+    const isOverloaded = isRetriableError(lastError);
     return NextResponse.json(
-      { error: err?.message || 'Internal Server Error' },
+      { error: isOverloaded
+          ? 'The AI is currently experiencing high demand. Please try again in a moment.'
+          : (lastError?.message || 'Internal Server Error') },
+      { status: isOverloaded ? 503 : 500 }
+    );
+  } catch (err: any) {
+    // Unexpected outer error (e.g. JSON parse failure)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

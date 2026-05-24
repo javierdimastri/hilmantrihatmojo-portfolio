@@ -29,11 +29,11 @@ export default function Conversation() {
     setLoading(true);
 
     try {
-      // Build history from all messages BEFORE the current user message
+      // Build history — map 'assistant' → 'model' to match API validation
       const history = messages.map((m) => ({
-        role: m.role,
+        role: m.role === 'assistant' ? 'model' : 'user',
         text: m.text,
-      }));
+      })) as { role: 'user' | 'model'; text: string }[];
 
       const res = await fetch('/api/genai', {
         method: 'POST',
@@ -42,8 +42,20 @@ export default function Conversation() {
       });
 
       if (!res.ok) {
-        const errBody = await res.text();
-        throw new Error(`API error ${res.status}: ${errBody}`);
+        // Read the error body to distinguish overload vs other errors
+        const errData = await res.json().catch(() => ({}));
+        const isOverloaded = res.status === 503;
+        const fallbackText = isOverloaded
+          ? '⏳ All AI models are currently busy. Please wait a moment and try again.'
+          : 'Sorry, something went wrong. Please try again.';
+
+        const errMsg: Message = {
+          id: String(Date.now() + 1),
+          role: 'assistant',
+          text: fallbackText,
+        };
+        setMessages((s) => [...s, errMsg]);
+        return;
       }
 
       const data = await res.json();
@@ -51,11 +63,11 @@ export default function Conversation() {
 
       const aiMsg: Message = { id: String(Date.now() + 1), role: 'assistant', text: aiText };
       setMessages((s) => [...s, aiMsg]);
-    } catch (err: any) {
+    } catch {
       const errMsg: Message = {
         id: String(Date.now() + 2),
         role: 'assistant',
-        text: '⚠️ Something went wrong. Please try again.',
+        text: 'Sorry, something went wrong. Please try again.',
       };
       setMessages((s) => [...s, errMsg]);
     } finally {
