@@ -90,6 +90,11 @@ type ConversationTurn = {
   text: string;
 };
 
+function containsCVKeyword(text: string): boolean {
+  const cvKeywords = ['cv', 'resume', 'hilman cv'];
+  return cvKeywords.some(keyword => text.toLowerCase().includes(keyword));
+}
+
 export async function POST(req: Request) {
   try {
     const { prompt, history = [] }: { prompt: string; history: ConversationTurn[] } = await req.json();
@@ -100,6 +105,15 @@ export async function POST(req: Request) {
         { error: 'Missing prompt' },
         { status: 400 }
       );
+    }
+
+    // Check if user is asking about CV
+    const isCVRequest = containsCVKeyword(prompt);
+    if (isCVRequest) {
+      return NextResponse.json({ 
+        text: "I'd be happy to share Hilman's CV! You can download it here: **[Download CV](https://hilmantrihatmojo-portfolio.vercel.app/HilmanCV.pdf)**\n\nThis document contains his complete professional experience, skills, education, and work history. Feel free to ask if you'd like to know more about any specific project or skill!",
+        hasCVAttachment: true
+      });
     }
 
     // Validate conversation history structure
