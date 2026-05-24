@@ -1,10 +1,18 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Github, Linkedin, Mail, Terminal, Database, Layout,
-  Server, Code2, Briefcase, GraduationCap, ChevronRight
+    Briefcase,
+    ChevronRight,
+    Code2,
+    Database,
+    Github,
+    GraduationCap,
+    Layout,
+    Linkedin, Mail,
+    Server,
+    Terminal
 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 // Static data
 const EXPERIENCES = [
@@ -115,6 +123,12 @@ const Navigation = React.memo(({ activeSection, onNavigate, isScrolled }: any) =
             {item}
           </button>
         ))}
+        <a
+          href="/conversation"
+          className={`text-sm font-medium transition-colors hover:text-blue-600 text-gray-600`}
+        >
+          Chat
+        </a>
       </div>
     </div>
   </nav>
@@ -137,6 +151,9 @@ const HeroSection = React.memo(({ onNavigate }: any) => (
 
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
             Fullstack Developer.
+            <p className="text-3xl md:text-4xl text-gray-600 mt-2 tracking-normal font-bold">
+              Hi, I'm Hilman.
+            </p>
           </h1>
 
           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-2xl">
