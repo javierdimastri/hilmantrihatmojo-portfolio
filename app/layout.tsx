@@ -8,25 +8,25 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Mohammed Hilman Trihatmojo - Fullstack Developer',
+  description: 'Personal website and blog of Mohammed Hilman Trihatmojo, a fullstack developer.',
+  generator: 'Mohammed Hilman Trihatmojo - Fullstack Developer',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/javierdimastri-bulat.png',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/javierdimastri-bulat.png',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/icon.svg',
+        url: '/javierdimastri-bulat.png',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: '/javierdimastri-bulat.png',
   },
 }
 
