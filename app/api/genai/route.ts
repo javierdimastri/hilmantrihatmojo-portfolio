@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Interactions } from '@google/genai';
 import { NextResponse } from 'next/server';
 
 const ai = new GoogleGenAI({
@@ -6,22 +6,30 @@ const ai = new GoogleGenAI({
 });
 
 // Fallback model chain — tried in order when a model is unavailable
-const MODEL_FALLBACKS = [
-  'gemini-2.5-flash',
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-3.5-flash'
+const MODEL_FALLBACKS: Interactions.Model[] = [
+  'gemini-3.8-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.6-flash',
+  'gemini-3.1-flash-lite',
 ];
 
 function isRetriableError(err: any): boolean {
   const msg: string = (err?.message || err?.toString() || '').toLowerCase();
   return (
     msg.includes('503') ||
+    msg.includes('429') ||
+    msg.includes('404') ||
     msg.includes('unavailable') ||
+    msg.includes('not_found') ||
+    msg.includes('not found') ||
     msg.includes('high demand') ||
     msg.includes('overloaded') ||
-    err?.status === 503
+    msg.includes('quota') ||
+    msg.includes('rate limit') ||
+    msg.includes('exceeded') ||
+    err?.status === 503 ||
+    err?.status === 429 ||
+    err?.status === 404
   );
 }
 
@@ -111,7 +119,7 @@ export async function POST(req: Request) {
     const isCVRequest = containsCVKeyword(prompt);
     if (isCVRequest) {
       return NextResponse.json({ 
-        text: "I'd be happy to share Hilman's CV! You can download it here: **[Download CV](https://hilmantrihatmojo-portfolio.vercel.app/HilmanCV.pdf)**\n\nThis document contains his complete professional experience, skills, education, and work history. Feel free to ask if you'd like to know more about any specific project or skill!",
+        text: "I'd be happy to share Hilman's CV! You can download it here: **[Download CV](/HilmanCV.pdf)**\n\nThis document contains his complete professional experience, skills, education, and work history. Feel free to ask if you'd like to know more about any specific project or skill!",
         hasCVAttachment: true
       });
     }
@@ -134,39 +142,46 @@ export async function POST(req: Request) {
       );
     }
 
-    // Build conversation contents with validated history
-    const contents = [
-      ...history.map((turn) => ({
-        role: turn.role, // already validated as 'user' | 'model'
-        parts: [{ text: turn.text.trim() }],
-      })),
+    // Build Interactions API steps with validated history
+    const input: Interactions.Step[] = [
+      ...history.map((turn): Interactions.Step =>
+        turn.role === 'user'
+          ? {
+              type: 'user_input',
+              content: [{ type: 'text', text: turn.text.trim() }],
+            }
+          : {
+              type: 'model_output',
+              content: [{ type: 'text', text: turn.text.trim() }],
+            }
+      ),
       // Add current user message
       {
-        role: 'user' as const,
-        parts: [{ text: prompt.trim() }],
+        type: 'user_input',
+        content: [{ type: 'text', text: prompt.trim() }],
       },
     ];
 
-    // Try each model in the fallback chain
+    // Try each model in the fallback chain using the Interactions API
     let lastError: any = null;
 
     for (const model of MODEL_FALLBACKS) {
       try {
-        const response = await ai.models.generateContent({
+        const interaction = await ai.interactions.create({
           model,
-          contents,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-          },
+          input,
+          system_instruction: SYSTEM_PROMPT,
+          store: false,
         });
 
-        return NextResponse.json({ text: response.text });
-
+        return NextResponse.json({
+          text: interaction.output_text ?? 'No response returned.',
+        });
       } catch (err: any) {
         lastError = err;
 
         if (isRetriableError(err)) {
-          // Model is overloaded — try next in chain
+          // Model is overloaded, quota-limited, or unavailable — try next in chain
           console.warn(`[genai] Model "${model}" unavailable, trying next fallback...`);
           continue;
         }
@@ -176,18 +191,16 @@ export async function POST(req: Request) {
       }
     }
 
-    // All models failed
+    // All models failed — return a safe, sanitized message (never expose raw API errors)
     const isOverloaded = isRetriableError(lastError);
     return NextResponse.json(
-      { error: isOverloaded
-          ? 'The AI is currently experiencing high demand. Please try again in a moment.'
-          : (lastError?.message || 'Internal Server Error') },
+      { error: isOverloaded ? 'AI_UNAVAILABLE' : 'AI_ERROR' },
       { status: isOverloaded ? 503 : 500 }
     );
-  } catch (err: any) {
+  } catch {
     // Unexpected outer error (e.g. JSON parse failure)
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'AI_ERROR' },
       { status: 500 }
     );
   }

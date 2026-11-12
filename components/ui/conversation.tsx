@@ -82,15 +82,39 @@ export default function Conversation() {
     }
   };
 
-  // Simple markdown-like renderer for bold and bullet lists
+  // Simple markdown-like renderer for bold, links, and bullet lists
+  const renderInline = (segment: string, keyPrefix: string) => {
+    const linkParts = segment.split(/(\[[^\]]+\]\([^)]+\))/g);
+    return linkParts.map((part, idx) => {
+      const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (linkMatch) {
+        const [, label, href] = linkMatch;
+        const isLocalDownload = href.startsWith('/') && href.endsWith('.pdf');
+        return (
+          <a
+            key={`${keyPrefix}-link-${idx}`}
+            href={href}
+            download={isLocalDownload ? 'HilmanCV.pdf' : undefined}
+            target={isLocalDownload ? undefined : '_blank'}
+            rel={isLocalDownload ? undefined : 'noopener noreferrer'}
+            className="text-blue-600 underline hover:text-blue-800 font-medium"
+          >
+            {label}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   const renderText = (text: string) => {
     return text.split('\n').map((line, i) => {
       // Bold: **text**
       const parts = line.split(/(\*\*[^*]+\*\*)/g).map((part, j) => {
         if (part.startsWith('**') && part.endsWith('**')) {
-          return <strong key={j}>{part.slice(2, -2)}</strong>;
+          return <strong key={j}>{renderInline(part.slice(2, -2), `${i}-${j}`)}</strong>;
         }
-        return part;
+        return <span key={j}>{renderInline(part, `${i}-${j}`)}</span>;
       });
       // Bullet list line
       if (line.trimStart().startsWith('- ') || line.trimStart().startsWith('• ')) {
